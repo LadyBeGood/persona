@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Background pattern layer -->
+    <pattern id="starPattern" width="100%" height="100%">
+      <rect width="100%" height="100%" fill="#000000" />
+    </pattern>
+
+    <style>
+      .bg { fill: #000000; }
+      
+      /* Base stripe styles */
+      .stripe-dark {
+        fill: #000000;
+      }
+      .stripe-light {
+        fill: #ffffff;
+      }
+
+      /* Inward movement animation applied to concentric star layers */
+      .star-layer {
+        transform-origin: center;
+        animation: moveInward 3s linear infinite;
+      }
+
+      /* Staggering scale keyframes to simulate continuous inward flow */
+      @keyframes moveInward {
+        0% {
+          transform: scale(1);
+          
+        }
+        100% {
+          transform: scale(0);
+        }
+      }
+
+      /* Create seamless loop with staggered animation delays */
+      .s1  { animation-delay: 0.0s;  stroke: red;     stroke-width: 10px;  fill: none; }
+      .s2  { animation-delay: -0.3s; stroke: green;   stroke-width: 10px;  fill: none; }
+      .s3  { animation-delay: -0.6s; stroke: blue;    stroke-width: 10px;  fill: none; }
+      .s4  { animation-delay: -0.9s; stroke: pink;    stroke-width: 10px;  fill: none; }
+      .s5  { animation-delay: -1.2s; stroke: indigo;  stroke-width: 10px;  fill: none; }
+      .s6  { animation-delay: -1.5s; stroke: yellow;  stroke-width: 10px;  fill: none; }
+      .s7  { animation-delay: -1.8s; stroke: magenta; stroke-width: 10px;  fill: none; }
+      .s8  { animation-delay: -2.1s; stroke: cyan;    stroke-width: 10px;  fill: none; }
+      .s9  { animation-delay: -2.4s; stroke: brown;   stroke-width: 10px;  fill: none; }
+      .s10 { animation-delay: -2.7s; stroke: silver;  stroke-width: 10px;  fill: none; }
+    </style>
+
+    <!-- 5-Pointed Star Shape Definition -->
+    <polygon id="star" points="250,25 315,160 465,180 355,285 385,435 250,360 115,435 145,285 35,180 185,160" />
+  </defs>
+
+  <!-- Deep Black Background -->
+  <rect width="500" height="500" class="bg" />
+
+  <!-- Concentric Star Stripes moving Inwards -->
+  <g transform="translate(0, 0)">
+    <use href="#star" class="star-layer s1 stripe-light" />
+    <use href="#star" class="star-layer s2 stripe-dark" />
+    <use href="#star" class="star-layer s3 stripe-light" />
+    <use href="#star" class="star-layer s4 stripe-dark" />
+    <use href="#star" class="star-layer s5 stripe-light" />
+    <use href="#star" class="star-layer s6 stripe-dark" />
+    <use href="#star" class="star-layer s7 stripe-light" />
+    <use href="#star" class="star-layer s8 stripe-dark" />
+    <use href="#star" class="star-layer s9 stripe-light" />
+    <use href="#star" class="star-layer s10 stripe-dark" />
+  </g>
+</svg>
+
+
+

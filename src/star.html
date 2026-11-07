@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100svh;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <svg viewBox="0 0 500 500" width="100%" height="100%">
+            <defs>
+                <style>
+                    .star-layer {
+                        transform-box: fill-box;
+                        transform-origin: center;
+                    }
+
+                    /* Base stripe styles */
+                    .star-black {
+                        fill: #000000 !important;
+                    }
+
+                    .star-white {
+                        fill: #ffffff !important;
+                    }
+                </style>
+                <polygon id="star"
+                    points="250,25 315,160 465,180 355,285 385,435 250,360 115,435 145,285 35,180 185,160" />
+
+                <clipPath id="starClip">
+                    <use href="#star" fill="white" style="transform: scale(0.9); transform-origin: center;" />
+                </clipPath>
+            </defs>
+
+            <rect width="500" height="500" fill="red" />
+
+
+            <g id="star-stack" clip-path="url(#starClip)">
+                <use href="#star" class="star-layer star-black" style="fill: red" />
+                <use href="#star" class="star-layer star-white" style="fill: green" />
+                <use href="#star" class="star-layer star-black" style="fill: blue" />
+                <use href="#star" class="star-layer star-white" style="fill: pink" />
+                <use href="#star" class="star-layer star-black" style="fill: indigo" />
+                <use href="#star" class="star-layer star-white" style="fill: yellow" />
+                <use href="#star" class="star-layer star-black" style="fill: magenta" />
+                <use href="#star" class="star-layer star-white" style="fill: cyan" />
+                <!-- <use href="#star" class="star-layer" style="fill: brown" /> -->
+                <!-- <use href="#star" class="star-layer" style="fill: silver" /> -->
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        const stack = document.getElementById('star-stack');
+        const stars = [...stack.querySelectorAll('use')];
+        const count = stars.length;
+        const DUR = 6000;                              // ms, scale 1 → 0
+        const initP = stars.map((_, i) => i / count);     // constant phases
+        const lastP = [...initP];                         // for wrap detection
+        const t0 = performance.now();
+
+        function frame(now) {
+            const elapsed = now - t0;                         // cumulative — fine now
+            for (let i = 0; i < count; i++) {
+                const p = (initP[i] + elapsed / DUR) % 1;
+                if (p < lastP[i]) stack.prepend(stars[i]);      // wrapped → new → back
+                stars[i].style.transform = `scale(${1 - p})`;
+                lastP[i] = p;
+            }
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    </script>
+</body>
+
+</html>

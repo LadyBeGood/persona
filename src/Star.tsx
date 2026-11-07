@@ -1,24 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 
 type StarAnimationProps = {
     direction?: "inwards" | "outwards",
     light?: string,
     dark?: string,
-    size?: number,
-    rotate?: number,
-    layer?: number,
+    className?: string,
 }
 
-export const StarAnimation: React.FC<StarAnimationProps> = ({ 
-    direction = "outwards",
-    size = 500,
-    light = "#fff",
-    dark = "#000",
-}) => {
+export function StarAnimation({ direction = "outwards", light = "var(--color-light-grey)", dark = "var(--color-black)", className = "" }: StarAnimationProps) {
     const duration = 6000;
     const starCount = 6;
 
     const starSpriteContainerRef = useRef<SVGGElement | null>(null);
+
+    const id = useId();
+    const starId = `star-${id}`;
+    const clipId = `starClip-${id}`;
 
     useEffect(() => {
         const starSpriteContainerElement = starSpriteContainerRef.current;
@@ -44,7 +41,7 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({
                 } else {
                     starSpriteContainerElement.append(starSpriteElement);
                 }
-            }
+            };
 
             starSpriteElement.addEventListener("animationiteration", handleAnimationIteration);
             cleanupFunctions.push(() => {
@@ -59,51 +56,54 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({
 
     return (
         <>
-            <style>{`
-                @keyframes shrink {
-                    0% { transform: scale(${ direction === "inwards" ? 1 : 0 }); }
-                    100% { transform: scale(${ direction === "inwards" ? 0 : 1 }); }
-                }
+            {/* <style>{`
                 .animate-shrink {
-                    animation: shrink ${duration}ms linear infinite;
+                    animation: shrink-${direction} ${duration}ms linear infinite; 
                     transform-box: fill-box;
                     transform-origin: center;
                     will-change: transform;
                 }
-            `}</style>
+            `}</style> */}
 
-            <div style={{ width: `${size}px`, height: `${size}px` }} className="bg-blue-600">
+            <div className={"absolute " + className}>
                 <svg viewBox="0 0 500 500" className="h-full w-full">
                     <defs>
                         {/* <polygon id="star" points="250,25 315,160 465,180 355,285 385,435 250,360 115,435 145,285 35,180 185,160" /> */}
-                        <polygon
+                        {/* <polygon
                             id="star"
-                            points="250,45 315,180 465,200 355,305 385,455 250,380 115,455 145,305 35,200 185,180"
+                            points="250,45 315,180 465,200 355,305 385,455 250,380 115,455 145,305 35,200 185,180" /> */}
+                        <polygon
+                            id={starId}
+                            points="250,0 315,160 500,185 365,300 405,500 250,390 95,500 135,300 0,185 185,160"
                         />
 
-                        <clipPath id="starClip">
+                        <clipPath id={clipId}>
                             <use
-                                href="#star"
+                                href={`#${starId}`}
                                 // Got 83 from trial and error
-                                style={{ transform: "scale(0.83)", transformOrigin: "center" }} 
-                            />
+                                style={{ transform: "scale(0.83)", transformOrigin: "center" }} />
                         </clipPath>
                     </defs>
 
-                    <g id="concentric-star-sprite-container" ref={starSpriteContainerRef} clipPath="url(#starClip)">
+                    <g ref={starSpriteContainerRef} clipPath={`url(#${clipId})`}>
                         {Array.from({ length: starCount }).map((_, i) => (
                             <use
                                 key={i}
-                                href="#star"
-                                style={{ fill: i % 2 === 0 ? dark : light }}
-                                className={`concentric-star-sprite animate-shrink`}
-                            />
+                                href={`#${starId}`}
+                                style={{ 
+                                    fill: i % 2 === 0 ? dark : light,
+                                    animation: `shrink-${direction} ${duration}ms linear infinite`,
+                                    transformBox: "fill-box",
+                                    transformOrigin: "center",
+                                    willChange: "transform",
+                                }}
+                                className={`concentric-star-sprite animate-shrink`} />
                         ))}
                     </g>
                 </svg>
             </div>
         </>
     );
-};
+}
 
 export default StarAnimation;

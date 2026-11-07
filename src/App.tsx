@@ -1,14 +1,16 @@
 import { createRoot } from "react-dom/client"
 import StarAnimation from "./Star";
+import { Home } from "./Home";
 // import { BrowserRouter, Routes, Route } from "react-router"
 
 
 
 export function App() {
     return (
-        <div>
-            <StarAnimation />
-        </div>
+        <>
+            <Home />
+            {/* <StarAnimation /> */}
+        </>
     )
 }
 

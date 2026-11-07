@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+
+:root {
+    --color-red: #c00001;
+    --color-grey: #616065;
+    --color-light-grey: #cfcfcf;
+    --color-black: #000000;
+    --color-white: #ffffff;
+}
+
+@keyframes shrink-inwards {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes shrink-outwards {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

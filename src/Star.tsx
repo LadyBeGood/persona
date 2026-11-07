@@ -1,10 +1,20 @@
 import React, { useEffect, useRef } from "react";
 
 type StarAnimationProps = {
-    direction?: "inwards" | "outwards"
+    direction?: "inwards" | "outwards",
+    light?: string,
+    dark?: string,
+    size?: number,
+    rotate?: number,
+    layer?: number,
 }
 
-export const StarAnimation: React.FC<StarAnimationProps> = ({ direction = "outwards" }) => {
+export const StarAnimation: React.FC<StarAnimationProps> = ({ 
+    direction = "outwards",
+    size = 500,
+    light = "#fff",
+    dark = "#000",
+}) => {
     const duration = 6000;
     const starCount = 6;
 
@@ -18,7 +28,6 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({ direction = "outwa
         if (direction === "outwards") {
             starSpriteElementList.reverse();
         }
-
 
         const cleanupFunctions: Array<() => void> = [];
 
@@ -49,7 +58,7 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({ direction = "outwa
     }, [duration, starCount]);
 
     return (
-        <div className="flex h-svh w-full items-center justify-center bg-red-600">
+        <>
             <style>{`
                 @keyframes shrink {
                     0% { transform: scale(${ direction === "inwards" ? 1 : 0 }); }
@@ -63,7 +72,7 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({ direction = "outwa
                 }
             `}</style>
 
-            <div className="h-[min(100vw,100vh)] w-[min(100vw,100vh)] bg-blue-600">
+            <div style={{ width: `${size}px`, height: `${size}px` }} className="bg-blue-600">
                 <svg viewBox="0 0 500 500" className="h-full w-full">
                     <defs>
                         {/* <polygon id="star" points="250,25 315,160 465,180 355,285 385,435 250,360 115,435 145,285 35,180 185,160" /> */}
@@ -75,7 +84,6 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({ direction = "outwa
                         <clipPath id="starClip">
                             <use
                                 href="#star"
-                                fill="white"
                                 // Got 83 from trial and error
                                 style={{ transform: "scale(0.83)", transformOrigin: "center" }} 
                             />
@@ -87,13 +95,14 @@ export const StarAnimation: React.FC<StarAnimationProps> = ({ direction = "outwa
                             <use
                                 key={i}
                                 href="#star"
-                                className={`concentric-star-sprite animate-shrink ${i % 2 === 0 ? "fill-black" : "fill-white"}`}
+                                style={{ fill: i % 2 === 0 ? dark : light }}
+                                className={`concentric-star-sprite animate-shrink`}
                             />
                         ))}
                     </g>
                 </svg>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -6,7 +6,9 @@ import StarAnimation from "./Star";
 
 export function App() {
     return (
-        <StarAnimation />
+        <div>
+            <StarAnimation />
+        </div>
     )
 }
 

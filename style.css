@@ -2,29 +2,15 @@
 
 
 :root {
-    --color-red: #c00001;
-    --color-grey: #616065;
-    --color-light-grey: #cfcfcf;
-    --color-black: #000000;
-    --color-white: #ffffff;
+    --persona-red: #c00001;
+    --persona-grey: #616065;
+    --persona-light-grey: #cfcfcf;
+    --persona-black: #000000;
+    --persona-white: #ffffff;
 }
 
-@keyframes shrink-inwards {
-    0% {
-        transform: scale(1);
-    }
 
-    100% {
-        transform: scale(0);
-    }
-}
-
-@keyframes shrink-outwards {
-    0% {
-        transform: scale(0);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+@font-face {
+    font-family: "Expose";
+    src: url(./james-lewis-daily-rhetoric-expose-font-230317/Expose-Regular.otf);
 }

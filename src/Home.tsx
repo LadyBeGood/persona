@@ -47,28 +47,57 @@ export function Home() {
                     <StarAnimation direction="inwards" className="w-[28.5%] left-[68.5%] top-[-1%] -rotate-10" />
                 </div>
             </div>
+
+
             <div className="w-full max-h-svh overflow-hidden absolute aspect-video grid place-items-center">
                 <img src="./removed.png" className="object-cover w-full" alt="" />
             </div>
+
             {/* <div className="w-full h-full overflow-hidden absolute opacity-10 top-1/2 left-1/2 -translate-1/2 grid place-items-center">
                 <img src="./maingrey.jpg" className="object-cover w-full" alt="" />
             </div> */}
 
             <div className="w-full h-full overflow-hidden absolute grid place-items-center font-[Expose] text-7xl">
-                <div className="relative grid place-items-center w-full h-full">
-                    <div className="absolute">
+                <div className="relative grid w-full h-full">
+                    <div className="absolute top-1/2 left-1/2 -translate-1/2">
                         <div className="[-webkit-text-stroke:35px_black]">Skills</div>
                         <div className="-translate-x-12 [-webkit-text-stroke:35px_black]">ProJecTs</div>
                         <div className="-translate-x-29 [-webkit-text-stroke:35px_black]">BUttONs</div>
                         <div className="-translate-x-14 [-webkit-text-stroke:35px_black]">ConTact</div>
                     </div>
-                    <div className="absolute">
+                    <div className="absolute top-1/2 left-1/2 -translate-1/2">
                         <div className="text-(--persona-white)">SkiLls</div>
                         <div className="-translate-x-12 text-(--persona-white)">ProJecTs</div>
                         <div className="-translate-x-29 text-(--persona-white)">BUttONs</div>
                         <div className="-translate-x-14 text-(--persona-white)">ConTact</div>
                     </div>
+
+                    <div className="absolute text-4xl text-white right-15 bottom-5 flex gap-20">
+                        <div className="[-webkit-text-stroke:15px_white] whitespace-pre">Navigate</div>
+                        <div className="[-webkit-text-stroke:15px_white]">Select</div>
+                    </div>
+
+                    <div className="absolute text-4xl text-white right-15 bottom-5 flex gap-20">
+                        <div className="[-webkit-text-stroke:10px_black] whitespace-pre">Navigate</div>
+                        <div className="[-webkit-text-stroke:10px_black]">Select</div>
+                    </div>
+
+                    <div className="absolute text-4xl text-white right-15 bottom-5 flex gap-20">
+                        <div className="whitespace-pre">Navigate</div>
+                        <div className="">Select</div>
+                    </div>
+
+                    <div className="absolute text-white bg-black outline-white outline-2 p-1.75  right-84 bottom-4.5">
+                        {/* ↑↓ */}
+                        <svg className="rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24" fill="currentColor"><path d="M7,21L2,16l5-5l1.43,1.4L5.83,15H21v2H5.83l2.6,2.6L7,21Zm10-8l-1.42-1.4L18.18,9H3V7H18.18l-2.6-2.6L17,3l5,5l-5,5Z" /></svg>
+                    </div>
+
+                    <div className="absolute text-white bg-black outline-white outline-2 p-1.75  right-37 bottom-4.5">
+                        {/* ␣ */}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M4,15V9H6v4H18V9h2v6H4Z" /></svg>
+                    </div>
                 </div>
+                
             </div>
 
         </>

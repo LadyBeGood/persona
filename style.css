@@ -12,7 +12,10 @@
 
 @font-face {
     font-family: "Expose";
-    src: url(./james-lewis-daily-rhetoric-expose-font-230317/Expose-Regular.otf);
+    src: url("./Expose-Regular-Cleaner.otf");
+    font-optical-sizing: none;
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: normal;
 }
 
 

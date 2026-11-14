@@ -1,5 +1,6 @@
-import StarAnimation from "./Star";
-
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import StarAnimation from "../components/Star";
+import StrokedText from "../components/StrokedText";
 
 function BackgroundLayer() {
     return (
@@ -55,33 +56,6 @@ function BackgroundLayer() {
 }
 
 
-function StrokedText({ className, children, strokeWidths, strokeColors }) {
-    if (strokeWidths.length !== strokeColors.length) {
-        throw new Error("Bhukkk");
-    }
-
-    return (
-        <>
-            {strokeWidths.map((strokeWidth, i) => 
-                <div className={className} role="presentation" style={{ 
-                    WebkitTextStrokeWidth: strokeWidth, 
-                    WebkitTextStrokeColor: strokeColors[i], 
-                    userSelect: "none", 
-                    paintOrder: "stroke fill", 
-                    WebkitTextFillColor: "transparent",
-                }}>
-                    {children}
-                </div>
-            )}
-
-            <div className={className}>
-                {children}
-            </div>
-        </>
-    )
-}
-
-
 // function Options() {
 //     return (
 //         <StrokedText className="absolute top-1/2 left-1/2 -translate-1/2 text-(--persona-white)" strokeWidths={["35px"]} strokeColors={["var(--persona-black)"]}>
@@ -95,9 +69,6 @@ function StrokedText({ className, children, strokeWidths, strokeColors }) {
 
 
 
-import {
-    memo, useCallback, useEffect, useLayoutEffect, useRef, useState,
-} from "react";
 
 /* ---------------- tuning ---------------- */
 const SVG_W = 100;
@@ -123,7 +94,7 @@ const ACTIVE_SCALE = 1.15;
 
 
 const SCALE_X = 1.5;
-const SCALE_Y = 1.25;
+const SCALE_Y = 1;
 
 /* ---------------- tight text bounds ---------------- */
 type TextBounds = { left: number; top: number; width: number; height: number };
@@ -206,16 +177,18 @@ const AnimatedPolygons = memo(function AnimatedPolygons() {
 /* ---------------- menu ---------------- */
 type Item = { label: string; offset: string };
 const ITEMS: Item[] = [
-    { label: "SkiLls", offset: "" },
-    { label: "ProJecTs", offset: "-translate-x-12" },
-    { label: "BUttONs", offset: "-translate-x-29" },
+    { label: "AbOut", offset: "translate-x-5" },
+    { label: "SkiLls", offset: "-translate-x-10" },
+    { label: "ProJecTs", offset: "-translate-x-32" },
+    // { label: "BUttONs", offset:  },
     { label: "ConTact", offset: "-translate-x-14" },
+    { label: "RéSuMé", offset: "-translate-x-26" },
 ];
 
 type Rect = { cx: number; cy: number; w: number; h: number };
 
 
-export default function Options() {
+export function Options() {
     const containerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [positions, setPositions] = useState<Rect[]>([]);
@@ -328,7 +301,7 @@ export default function Options() {
                 </svg>
             )}
 
-            
+
         </div>
     );
 }
@@ -352,7 +325,7 @@ function TextLayer() {
                         Navigate
                     </div>
 
-                    <div  className="flex gap-4">
+                    <div className="flex gap-4">
                         <div className="bg-black outline-white outline-3 p-1.75  right-37">
                             {/* ␣ */}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M4,15V9H6v4H18V9h2v6H4Z" /></svg>
@@ -368,7 +341,7 @@ function TextLayer() {
 
 
 
-                <div className="absolute top-3 left-3 text-4xl font-[NimbusSanLBold] w-40 h-40 ">
+                {/* <div className="absolute top-3 left-3 text-4xl font-[NimbusSanLBold] w-40 h-40 ">
                     <div className="relative w-full h-full">
                         <div className="absolute text-7xl tracking-tighter -rotate-6 left-[30%] top-[10%] scale-x-[0.9] [-webkit-text-stroke:25px_var(--persona-white)]">18</div>
                         <div className="absolute text-7xl tracking-tighter -rotate-6 left-[30%] top-[10%] w-[2ch] h-[1em] grid place-items-center">
@@ -393,14 +366,14 @@ function TextLayer() {
                         <div className="absolute [-webkit-text-stroke:18px_var(--persona-black)]">utkarsh</div>
                         <div className="absolute text-(--persona-white)">utkarsh</div>
                     </div>
-                </div>
+                </div> */}
 
             </div>
         </div>
     )
 }
 
-export function Home() {
+export default function Home() {
     return (
         <>
             <BackgroundLayer />

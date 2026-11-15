@@ -175,24 +175,25 @@ const AnimatedPolygons = memo(function AnimatedPolygons() {
 });
 
 /* ---------------- menu ---------------- */
-type Item = { label: string; offset: string };
-const ITEMS: Item[] = [
-    { label: "AbOut", offset: "translate-x-5" },
-    { label: "SkiLls", offset: "-translate-x-10" },
-    { label: "ProJecTs", offset: "-translate-x-32" },
-    // { label: "BUttONs", offset:  },
-    { label: "ConTact", offset: "-translate-x-14" },
-    { label: "RéSuMé", offset: "-translate-x-26" },
+type ButtonsMetadata = { label: string, path?: string, offset: string,  };
+
+const buttonMetadatas: ButtonsMetadata[] = [
+    { label: "AbOut",    path: "/about",    offset: "translate-x-5"   },
+    { label: "SkiLls",   path: "/skills",   offset: "-translate-x-10" },
+    { label: "ProJecTs", path: "/projects", offset: "-translate-x-32" },
+    { label: "ConTact",  path: "/contact",  offset: "-translate-x-14" },
+    { label: "RéSuMé",                      offset: "-translate-x-26" },
 ];
 
 type Rect = { cx: number; cy: number; w: number; h: number };
-
+import { useNavigate } from "react-router";
 
 export function Options() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [positions, setPositions] = useState<Rect[]>([]);
-    const [current, setCurrent] = useState(0);
+    const [currentButtonIndex, setCurrentButtonIndex] = useState(0);
+    const navigate = useNavigate();
 
     /* --- measure via text bounds, scale proportionally --- */
     const measure = useCallback(() => {
@@ -231,7 +232,7 @@ export function Options() {
         };
         raf = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(raf);
-    }, [current, measure]);
+    }, [currentButtonIndex, measure]);
 
     /* --- mount / font / resize --- */
     useEffect(() => {
@@ -245,54 +246,91 @@ export function Options() {
         };
     }, [measure]);
 
-    /* --- keyboard --- */
+
+
     useEffect(() => {
-        const onKey = (e: KeyboardEvent) => {
-            const t = e.target as HTMLElement | null;
-            if (t?.closest('input, textarea, select, [contenteditable="true"]')) return;
-            if (e.key === "ArrowDown") { e.preventDefault(); setCurrent((c) => Math.min(c + 1, ITEMS.length - 1)); }
-            if (e.key === "ArrowUp") { e.preventDefault(); setCurrent((c) => Math.max(c - 1, 0)); }
-        };
-        window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
+        containerRef.current?.focus();
     }, []);
 
-    const cur = positions[current];
+    // useEffect(() => {
+    //     function onKey(event: KeyboardEvent) {
+
+    //     window.addEventListener("keydown", onKey);
+    //     return () => window.removeEventListener("keydown", onKey);
+    // }, []);
+
+
+    function handleButtonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, i: number) {
+        setCurrentButtonIndex(i);
+        const path = event.currentTarget.dataset.path;
+        if (path !== undefined) {
+            navigate(path);
+        }
+    }
+
+
+
+    function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+        switch (event.key) {
+            case "ArrowDown":
+                event.preventDefault();
+                setCurrentButtonIndex((current) => Math.min(current + 1, buttonMetadatas.length - 1));
+                break;
+            case "ArrowUp":
+                event.preventDefault();
+                setCurrentButtonIndex((current) => Math.max(current - 1, 0));
+                break;
+            case " ":
+            case "Enter": {
+                event.preventDefault();
+                const path = buttonMetadatas[currentButtonIndex].path;
+                if (path !== undefined) 
+                    navigate(path);
+                break;
+            }
+        }
+    }
 
     return (
-        <div ref={containerRef} className="relative h-full w-full select-none">
+        <div
+            ref={containerRef} 
+            className="relative h-full w-full select-none"
+            tabIndex={0} // Make this element focusable in order to capture key down events
+            onKeyDown={handleKeyDown}
+        >
             <StrokedText
-                className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-(--persona-white)"
+                className="absolute leading-[0.89] left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-(--persona-white)"
                 strokeWidths={["35px"]}
                 strokeColors={["var(--persona-black)"]}
             >
-                {ITEMS.map((item, i) => (
-                    <div
+                {buttonMetadatas.map((item, i) => (
+                    <button
                         key={item.label}
-                        ref={(el) => { itemRefs.current[i] = el; }}
-                        onMouseEnter={() => setCurrent(i)}
-                        onClick={() => setCurrent(i)}
+                        data-path={item.path}
+                        ref={(element) => { itemRefs.current[i] = element }}
+                        onMouseEnter={() => setCurrentButtonIndex(i)}
+                        onClick={(event) => handleButtonClick(event, i)}
                         className={[
-                            "cursor-pointer origin-center transition-transform duration-150",
+                            "block cursor-pointer origin-center transition-transform duration-150",
                             item.offset,
-                            i === current ? "scale-[1.15]" : "scale-100",
+                            i === currentButtonIndex ? "scale-[1.2]" : "scale-100",
                         ].join(" ")}
                     >
                         {item.label}
-                    </div>
+                    </button>
                 ))}
             </StrokedText>
 
-            {positions[current] && (
+            {positions[currentButtonIndex] && (
                 <svg
                     className="pointer-events-none absolute z-30"
                     viewBox={`0 0 ${SVG_W} ${SVG_H}`}
                     preserveAspectRatio="none"
                     style={{
-                        left: `${positions[current].cx}%`,
-                        top: `${positions[current].cy}%`,
-                        width: `${positions[current].w}%`,
-                        height: `${positions[current].h}%`,
+                        left: `${positions[currentButtonIndex].cx}%`,
+                        top: `${positions[currentButtonIndex].cy}%`,
+                        width: `${positions[currentButtonIndex].w}%`,
+                        height: `${positions[currentButtonIndex].h}%`,
                         transform: "translate(-50%, -50%)",
                         mixBlendMode: "difference",
                     }}
@@ -300,8 +338,6 @@ export function Options() {
                     <AnimatedPolygons />
                 </svg>
             )}
-
-
         </div>
     );
 }

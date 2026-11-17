@@ -2,12 +2,12 @@ import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 
 import StarAnimation from "../components/Star";
 import StrokedText from "../components/StrokedText";
 
-function BackgroundLayer() {
+function Background() {
     return (
         <>
             {/* Background image */}
             <div className="w-full h-full overflow-hidden absolute">
-                <img src="./terrace2.jpg" className="object-cover h-full w-full" alt="" />
+                <img src="./backgrounds/PNG/Day2.png" className="object-cover h-full w-full" alt="" />
             </div>
 
             {/* Red Overlay */}
@@ -23,7 +23,7 @@ function BackgroundLayer() {
                 </div> */}
 
 
-                {/* <div className="w-full h-full relative">
+                <div className="w-full h-full relative">
                     <StarAnimation direction="outwards" className="w-[24%] left-[75%] top-[29%] -rotate-40" />
                     <StarAnimation direction="outwards" className="w-[20%] left-[84%] top-[48%] -rotate-10" />
                     <StarAnimation direction="inwards" className="w-[23%] left-[88%] top-[-10%]  -rotate-10" />
@@ -44,7 +44,7 @@ function BackgroundLayer() {
                     <StarAnimation direction="outwards" className="w-[20%] left-[87%] top-[55%] -rotate-40" dark="var(--persona-grey)" />
                     <StarAnimation direction="outwards" className="w-[23%] left-[85%] top-[30%] rotate-10" />
                     <StarAnimation direction="inwards" className="w-[28.5%] left-[68.5%] top-[-1%] -rotate-10" />
-                </div> */}
+                </div>
             </div>
 
             {/* Art */}
@@ -54,20 +54,6 @@ function BackgroundLayer() {
         </>
     )
 }
-
-
-// function Options() {
-//     return (
-//         <StrokedText className="absolute top-1/2 left-1/2 -translate-1/2 text-(--persona-white)" strokeWidths={["35px"]} strokeColors={["var(--persona-black)"]}>
-//             <div>SkiLls</div>
-//             <div className="-translate-x-12">ProJecTs</div>
-//             <div className="-translate-x-29">BUttONs</div>
-//             <div className="-translate-x-14">ConTact</div>
-//         </StrokedText>
-//     )
-// }
-
-
 
 
 /* ---------------- tuning ---------------- */
@@ -247,20 +233,13 @@ export function Options() {
     }, [measure]);
 
 
-
     useEffect(() => {
         containerRef.current?.focus();
     }, []);
 
-    // useEffect(() => {
-    //     function onKey(event: KeyboardEvent) {
-
-    //     window.addEventListener("keydown", onKey);
-    //     return () => window.removeEventListener("keydown", onKey);
-    // }, []);
-
 
     function handleButtonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, i: number) {
+        console.log("here" + Math.random());
         setCurrentButtonIndex(i);
         const path = event.currentTarget.dataset.path;
         if (path !== undefined) {
@@ -311,7 +290,7 @@ export function Options() {
                         onMouseEnter={() => setCurrentButtonIndex(i)}
                         onClick={(event) => handleButtonClick(event, i)}
                         className={[
-                            "block cursor-pointer origin-center transition-transform duration-150",
+                            "block cursor-pointer origin-center transition-transform duration-150 bg-green-500",
                             item.offset,
                             i === currentButtonIndex ? "scale-[1.2]" : "scale-100",
                         ].join(" ")}
@@ -321,7 +300,7 @@ export function Options() {
                 ))}
             </StrokedText>
 
-            {positions[currentButtonIndex] && (
+            {/* {positions[currentButtonIndex] && (
                 <svg
                     className="pointer-events-none absolute z-30"
                     viewBox={`0 0 ${SVG_W} ${SVG_H}`}
@@ -337,7 +316,7 @@ export function Options() {
                 >
                     <AnimatedPolygons />
                 </svg>
-            )}
+            )} */}
         </div>
     );
 }
@@ -345,7 +324,7 @@ export function Options() {
 
 
 
-function TextLayer() {
+function Foreground() {
     return (
         <div className="w-full h-full overflow-hidden absolute grid place-items-center font-[Expose] text-7xl">
             <div className="relative grid w-full h-full">
@@ -370,40 +349,6 @@ function TextLayer() {
                         Select
                     </div>
                 </StrokedText>
-
-
-
-
-
-
-
-                {/* <div className="absolute top-3 left-3 text-4xl font-[NimbusSanLBold] w-40 h-40 ">
-                    <div className="relative w-full h-full">
-                        <div className="absolute text-7xl tracking-tighter -rotate-6 left-[30%] top-[10%] scale-x-[0.9] [-webkit-text-stroke:25px_var(--persona-white)]">18</div>
-                        <div className="absolute text-7xl tracking-tighter -rotate-6 left-[30%] top-[10%] w-[2ch] h-[1em] grid place-items-center">
-                            <div className="w-[60%] h-[60%] bg-black"></div>
-                        </div>
-                        <div className="absolute text-7xl tracking-tighter -rotate-6 left-[30%] top-[10%] scale-x-[0.9] [-webkit-text-stroke:18px_var(--persona-black)]">18</div>
-                        <div className="absolute text-7xl tracking-tighter -rotate-6 left-[30%] top-[10%] scale-x-[0.9] text-(--persona-white)">18</div>
-
-                        <div className="text-3xl absolute left-[20%] top-[50%] -rotate-15 tracking-tighter scale-x-[0.9] [-webkit-text-stroke:6px_var(--persona-white)] ">MoNDaY</div>
-                        <div className="text-3xl absolute left-[20%] top-[50%] -rotate-15 tracking-tighter scale-x-[0.9]">MoNDaY</div>
-
-
-                        <div className="text-2xl absolute left-[8%] top-[30%] rotate-7 tracking-tighter scale-x-[0.9]  [-webkit-text-stroke:13px_var(--persona-white)] ">Nov</div>
-                        <div className="text-2xl absolute left-[8%] top-[30%] rotate-7 tracking-tighter scale-x-[0.9]  [-webkit-text-stroke:8px_var(--persona-black)] ">Nov</div>
-                        <div className="text-2xl text-(--persona-white) absolute left-[8%] top-[30%] rotate-7 tracking-tighter scale-x-[0.9]">Nov</div>
-                    </div>
-                </div>
-
-                <div className="absolute bottom-0 left-5 h-20 w-100 rotate-6">
-
-                    <div className="relative w-full h-full">
-                        <div className="absolute [-webkit-text-stroke:18px_var(--persona-black)]">utkarsh</div>
-                        <div className="absolute text-(--persona-white)">utkarsh</div>
-                    </div>
-                </div> */}
-
             </div>
         </div>
     )
@@ -412,8 +357,9 @@ function TextLayer() {
 export default function Home() {
     return (
         <>
-            <BackgroundLayer />
-            <TextLayer />
+            <Background />
+            <Foreground />
         </>
     )
 }
+

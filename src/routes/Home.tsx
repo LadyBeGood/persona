@@ -5,14 +5,6 @@ import StrokedText from "../components/StrokedText";
 function Background() {
     return (
         <>
-            {/* Background image */}
-            <div className="w-full h-full overflow-hidden absolute">
-                <img src="./backgrounds/PNG/Day2.png" className="object-cover h-full w-full" alt="" />
-            </div>
-
-            {/* Red Overlay */}
-            <div className="w-full h-full overflow-hidden absolute opacity-70 bg-(--persona-red)"></div>
-
             {/* Stars */}
             <div
                 className="w-full absolute aspect-video overflow-hidden"

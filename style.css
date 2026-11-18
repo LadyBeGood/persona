@@ -9,9 +9,9 @@
     --persona-white: #ffffff;
 }
 
-* {
+/* * {
     cursor: url("./pointer64x57.png"), auto !important;
-}
+} */
 
 @font-face {
     font-family: "Expose";

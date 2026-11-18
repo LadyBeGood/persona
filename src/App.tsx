@@ -7,6 +7,7 @@ import About from "./routes/About";
 import Skills from "./routes/Skills";
 import Projects from "./routes/Projects";
 import Contact from "./routes/Contact";
+import Layout from "./components/Layout";
 
 
 
@@ -14,11 +15,13 @@ export function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route index element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/skills" element={<Skills />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/contact" element={<Contact />} />
+                <Route element={<Layout />}>
+                    <Route index element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/skills" element={<Skills />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/contact" element={<Contact />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     )

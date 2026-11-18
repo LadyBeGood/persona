@@ -9,10 +9,13 @@
     --persona-white: #ffffff;
 }
 
+* {
+    cursor: url("./pointer64x57.png"), auto !important;
+}
 
 @font-face {
     font-family: "Expose";
-    src: url("./Expose-Regular5.otf");
+    src: url("./fonts/Expose-Cleaner-Regular.otf");
     font-optical-sizing: none;
     -webkit-font-smoothing: antialiased;
     font-variation-settings: normal;

@@ -23,7 +23,7 @@ function Background() {
                 </div> */}
 
 
-                <div className="w-full h-full relative">
+                {/* <div className="w-full h-full relative">
                     <StarAnimation direction="outwards" className="w-[24%] left-[75%] top-[29%] -rotate-40" />
                     <StarAnimation direction="outwards" className="w-[20%] left-[84%] top-[48%] -rotate-10" />
                     <StarAnimation direction="inwards" className="w-[23%] left-[88%] top-[-10%]  -rotate-10" />
@@ -44,7 +44,7 @@ function Background() {
                     <StarAnimation direction="outwards" className="w-[20%] left-[87%] top-[55%] -rotate-40" dark="var(--persona-grey)" />
                     <StarAnimation direction="outwards" className="w-[23%] left-[85%] top-[30%] rotate-10" />
                     <StarAnimation direction="inwards" className="w-[28.5%] left-[68.5%] top-[-1%] -rotate-10" />
-                </div>
+                </div> */}
             </div>
 
             {/* Art */}
@@ -290,7 +290,7 @@ export function Options() {
                         onMouseEnter={() => setCurrentButtonIndex(i)}
                         onClick={(event) => handleButtonClick(event, i)}
                         className={[
-                            "block cursor-pointer origin-center transition-transform duration-150 bg-green-500",
+                            "block cursor-pointer origin-center transition-transform duration-150",
                             item.offset,
                             i === currentButtonIndex ? "scale-[1.2]" : "scale-100",
                         ].join(" ")}
@@ -300,7 +300,7 @@ export function Options() {
                 ))}
             </StrokedText>
 
-            {/* {positions[currentButtonIndex] && (
+            {positions[currentButtonIndex] && (
                 <svg
                     className="pointer-events-none absolute z-30"
                     viewBox={`0 0 ${SVG_W} ${SVG_H}`}
@@ -316,7 +316,7 @@ export function Options() {
                 >
                     <AnimatedPolygons />
                 </svg>
-            )} */}
+            )}
         </div>
     );
 }

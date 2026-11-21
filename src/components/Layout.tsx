@@ -20,7 +20,7 @@ export default function Layout() {
                 <img src="./confirm.png" className="object-cover h-full w-full" alt="" />
             </div> */}
 
-            <Confirm />
+            {/* <Confirm /> */}
         </>
     )
 }

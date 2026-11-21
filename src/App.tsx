@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client"
-import StarAnimation from "./components/Star";
 import { BrowserRouter, Routes, Route } from "react-router"
 
 import Home from "./routes/Home";

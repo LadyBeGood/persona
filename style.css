@@ -9,9 +9,9 @@
     --persona-white: #ffffff;
 }
 
-/* * {
+* {
     cursor: url("./pointer64x57.png"), auto !important;
-} */
+}
 
 @font-face {
     font-family: "Expose";
@@ -22,3 +22,22 @@
 }
 
 
+@keyframes shrink-inwards {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0);
+    }
+}
+
+@keyframes shrink-outwards {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

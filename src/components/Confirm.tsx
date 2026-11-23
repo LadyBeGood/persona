@@ -89,8 +89,8 @@ export function SimpleOptions({ options }: { options: [string, string] }) {
                 break;
             case "Enter": {
                 event.preventDefault();
-                const path = options[activeIdx]?.path;
-                if (path) navigate(path);
+                // const path = options[activeIdx]?.path;
+                // if (path) navigate(path);
                 break;
             }
         }
@@ -111,7 +111,7 @@ export function SimpleOptions({ options }: { options: [string, string] }) {
                         onFocus={() => setActiveIdx(i)}
                         onClick={() => {
                             setActiveIdx(i);
-                            if (path) navigate(path);
+                            // action();
                         }}
                         className={[
                             "relative px-2 transition-colors z-1000 duration-150 w-65 h-13",

@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import StarAnimation from "../components/Star";
+import StarAnimation from "../components/StarAnimation";
 import StrokedText from "../components/StrokedText";
+import { useNavigate } from "react-router";
 
 function Background() {
     return (
@@ -15,7 +16,7 @@ function Background() {
                 </div> */}
 
 
-                {/* <div className="w-full h-full relative">
+                <div className="w-full h-full relative">
                     <StarAnimation direction="outwards" className="w-[24%] left-[75%] top-[29%] -rotate-40" />
                     <StarAnimation direction="outwards" className="w-[20%] left-[84%] top-[48%] -rotate-10" />
                     <StarAnimation direction="inwards" className="w-[23%] left-[88%] top-[-10%]  -rotate-10" />
@@ -36,7 +37,7 @@ function Background() {
                     <StarAnimation direction="outwards" className="w-[20%] left-[87%] top-[55%] -rotate-40" dark="var(--persona-grey)" />
                     <StarAnimation direction="outwards" className="w-[23%] left-[85%] top-[30%] rotate-10" />
                     <StarAnimation direction="inwards" className="w-[28.5%] left-[68.5%] top-[-1%] -rotate-10" />
-                </div> */}
+                </div>
             </div>
 
             {/* Art */}
@@ -62,14 +63,6 @@ const CX = SVG_W / 2;
 const CY = SVG_H / 2;
 const W = CX - H_CENTER - H_EDGE;
 const H = CY - V_CENTER - V_EDGE;
-
-const PAD_X_PX = 32;
-const PAD_Y_PX = 10;
-const ACTIVE_SCALE = 1.15;
-
-
-
-
 
 const SCALE_X = 1.5;
 const SCALE_Y = 1;
@@ -113,7 +106,7 @@ function toPointsString(a: number[]) {
     return s.trim();
 }
 
-/* ---------------- polygon animator (unchanged) ---------------- */
+
 const AnimatedPolygons = memo(function AnimatedPolygons() {
     const [red, setRed] = useState<number[]>(randomPointsArray);
     const [blue, setBlue] = useState<number[]>(randomPointsArray);
@@ -152,19 +145,14 @@ const AnimatedPolygons = memo(function AnimatedPolygons() {
     );
 });
 
-/* ---------------- menu ---------------- */
-type ButtonsMetadata = { label: string, path?: string, offset: string,  };
+type ButtonsMetadata = { 
+    label: string, 
+    action: () => void, 
+    offset: string,  
+};
 
-const buttonMetadatas: ButtonsMetadata[] = [
-    { label: "AbOut",    path: "/about",    offset: "translate-x-5"   },
-    { label: "SkiLls",   path: "/skills",   offset: "-translate-x-10" },
-    { label: "ProJecTs", path: "/projects", offset: "-translate-x-32" },
-    { label: "ConTact",  path: "/contact",  offset: "-translate-x-14" },
-    { label: "RéSuMé",                      offset: "-translate-x-26" },
-];
 
 type Rect = { cx: number; cy: number; w: number; h: number };
-import { useNavigate } from "react-router";
 
 export function Options() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -172,6 +160,15 @@ export function Options() {
     const [positions, setPositions] = useState<Rect[]>([]);
     const [currentButtonIndex, setCurrentButtonIndex] = useState(0);
     const navigate = useNavigate();
+
+    const buttonMetadatas: ButtonsMetadata[] = [
+        { label: "AbOut", action: () => navigate("/about"), offset: "translate-x-5" },
+        { label: "SkiLls", action: () => navigate("/skills"), offset: "-translate-x-10" },
+        { label: "ProJecTs", action: () => navigate("/projects"), offset: "-translate-x-32" },
+        { label: "ConTact", action: () => navigate("/contact"), offset: "-translate-x-14" },
+        { label: "RéSuMé", action: () => /* togglr confirm */ undefined, offset: "-translate-x-26" },
+    ];
+
 
     /* --- measure via text bounds, scale proportionally --- */
     const measure = useCallback(() => {
@@ -233,10 +230,7 @@ export function Options() {
     function handleButtonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, i: number) {
         console.log("here" + Math.random());
         setCurrentButtonIndex(i);
-        const path = event.currentTarget.dataset.path;
-        if (path !== undefined) {
-            navigate(path);
-        }
+        buttonMetadatas[i].action();
     }
 
 
@@ -254,9 +248,7 @@ export function Options() {
             case " ":
             case "Enter": {
                 event.preventDefault();
-                const path = buttonMetadatas[currentButtonIndex].path;
-                if (path !== undefined) 
-                    navigate(path);
+                buttonMetadatas[currentButtonIndex].action();
                 break;
             }
         }
@@ -277,7 +269,6 @@ export function Options() {
                 {buttonMetadatas.map((item, i) => (
                     <button
                         key={item.label}
-                        data-path={item.path}
                         ref={(element) => { itemRefs.current[i] = element }}
                         onMouseEnter={() => setCurrentButtonIndex(i)}
                         onClick={(event) => handleButtonClick(event, i)}

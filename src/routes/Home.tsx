@@ -3,22 +3,18 @@ import StarAnimation from "../components/StarAnimation";
 import StrokedText from "../components/StrokedText";
 import { useNavigate } from "react-router";
 import StarBackground from "../components/StarBackground";
+import Flashy from "../components/Flashy";
 
 function Background() {
     return (
         <>
             {/* Stars */}
-            <div
+            {/* <div
                 className="w-full absolute aspect-video overflow-hidden"
                 style={{ mask: "linear-gradient(-71.8deg, #fff 49.5%, transparent 0) top right" }}
             >
-                {/* <div className="bg-(--persona-white) w-full h-full">
-
-                </div> */}
-
-
                 <StarBackground />
-            </div>
+            </div> */}
 
             {/* Art */}
             <div className="w-full absolute aspect-video grid place-items-center">
@@ -28,116 +24,16 @@ function Background() {
     )
 }
 
-
-/* ---------------- tuning ---------------- */
-const SVG_W = 100;
-const SVG_H = 50;
-const ANIM_MS = 120;
-
-const H_EDGE = 0;
-const V_EDGE = 0;
-const H_CENTER = 20;
-const V_CENTER = 5;
-
-const CX = SVG_W / 2;
-const CY = SVG_H / 2;
-const W = CX - H_CENTER - H_EDGE;
-const H = CY - V_CENTER - V_EDGE;
-
-const SCALE_X = 1.5;
-const SCALE_Y = 1;
-
-/* ---------------- tight text bounds ---------------- */
-type TextBounds = { left: number; top: number; width: number; height: number };
-
-function getTextBounds(el: HTMLElement): TextBounds | null {
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    const rects = Array.from(range.getClientRects());
-    if (!rects.length) return null;
-
-    let l = Infinity, t = Infinity, r = -Infinity, b = -Infinity;
-    for (const rect of rects) {
-        l = Math.min(l, rect.left);
-        t = Math.min(t, rect.top);
-        r = Math.max(r, rect.right);
-        b = Math.max(b, rect.bottom);
-    }
-    return { left: l, top: t, width: r - l, height: b - t };
-}
-
-
-
-
-/* ---------------- jitter points ---------------- */
-function randomPointsArray(): number[] {
-    const r = Math.random;
-    return [
-        r() * W + H_EDGE, r() * H + V_EDGE,
-        r() * W + CX + H_CENTER, r() * H + V_EDGE,
-        r() * W + CX + H_CENTER, r() * H + CY + V_CENTER,
-        r() * W + H_EDGE, r() * H + CY + V_CENTER,
-    ];
-}
-
-function toPointsString(a: number[]) {
-    let s = "";
-    for (let i = 0; i < a.length; i += 2) s += `${a[i]},${a[i + 1]} `;
-    return s.trim();
-}
-
-
-const AnimatedPolygons = memo(function AnimatedPolygons() {
-    const [red, setRed] = useState<number[]>(randomPointsArray);
-    const [blue, setBlue] = useState<number[]>(randomPointsArray);
-
-    useEffect(() => {
-        let raf = 0;
-        let fromRed = randomPointsArray();
-        let fromBlue = randomPointsArray();
-        let toRed = randomPointsArray();
-        let toBlue = randomPointsArray();
-        let cycleStart = performance.now();
-
-        const tick = (now: number) => {
-            const t = Math.min((now - cycleStart) / ANIM_MS, 1);
-            setRed(fromRed.map((v, i) => v + (toRed[i] - v) * t));
-            setBlue(fromBlue.map((v, i) => v + (toBlue[i] - v) * t));
-
-            if (t >= 1) {
-                fromRed = toRed;
-                fromBlue = toBlue;
-                toRed = randomPointsArray();
-                toBlue = randomPointsArray();
-                cycleStart = now;
-            }
-            raf = requestAnimationFrame(tick);
-        };
-        raf = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(raf);
-    }, []);
-
-    return (
-        <>
-            <polygon points={toPointsString(red)} fill="#ff0022" style={{ mixBlendMode: "multiply" }} />
-            <polygon points={toPointsString(blue)} fill="#1cfeff" style={{ mixBlendMode: "multiply" }} />
-        </>
-    );
-});
-
 type ButtonsMetadata = { 
     label: string, 
     action: () => void, 
     offset: string,  
 };
 
-
-type Rect = { cx: number; cy: number; w: number; h: number };
-
 export function Options() {
     const containerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
-    const [positions, setPositions] = useState<Rect[]>([]);
+    // const [positions, setPositions] = useState<Rect[]>([]);
     const [currentButtonIndex, setCurrentButtonIndex] = useState(0);
     const navigate = useNavigate();
 
@@ -149,59 +45,6 @@ export function Options() {
         { label: "RéSuMé", action: () => /* togglr confirm */ undefined, offset: "-translate-x-26" },
     ];
 
-
-    /* --- measure via text bounds, scale proportionally --- */
-    const measure = useCallback(() => {
-        const container = containerRef.current;
-        if (!container) return;
-        const cRect = container.getBoundingClientRect();
-        if (!cRect.width || !cRect.height) return;
-
-        setPositions(
-            itemRefs.current.map((el): Rect => {
-                if (!el) return { cx: 50, cy: 50, w: 20, h: 8 };
-                const r = getTextBounds(el);
-                if (!r) return { cx: 50, cy: 50, w: 20, h: 8 };
-
-                const cx = r.left + r.width / 2 - cRect.left;
-                const cy = r.top + r.height / 2 - cRect.top;
-
-                return {
-                    cx: (cx / cRect.width) * 100,
-                    cy: (cy / cRect.height) * 100,
-                    w: (r.width * SCALE_X / cRect.width) * 100,
-                    h: (r.height * SCALE_Y / cRect.height) * 100,
-                };
-            }),
-        );
-    }, []);
-
-    /* --- re-measure during the scale transition so SVG follows the text --- */
-    useLayoutEffect(() => {
-        measure();
-        let raf = 0;
-        const start = performance.now();
-        const loop = () => {
-            measure();
-            if (performance.now() - start < 220) raf = requestAnimationFrame(loop);
-        };
-        raf = requestAnimationFrame(loop);
-        return () => cancelAnimationFrame(raf);
-    }, [currentButtonIndex, measure]);
-
-    /* --- mount / font / resize --- */
-    useEffect(() => {
-        document.fonts?.ready.then(measure).catch(() => { });
-        const ro = new ResizeObserver(measure);
-        if (containerRef.current) ro.observe(containerRef.current);
-        window.addEventListener("resize", measure);
-        return () => {
-            ro.disconnect();
-            window.removeEventListener("resize", measure);
-        };
-    }, [measure]);
-
-
     useEffect(() => {
         containerRef.current?.focus();
     }, []);
@@ -212,7 +55,6 @@ export function Options() {
         setCurrentButtonIndex(i);
         buttonMetadatas[i].action();
     }
-
 
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
@@ -241,11 +83,41 @@ export function Options() {
             tabIndex={0} // Make this element focusable in order to capture key down events
             onKeyDown={handleKeyDown}
         >
-            <StrokedText
-                className="absolute leading-[0.89] left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-(--persona-white)"
-                strokeWidths={["35px"]}
-                strokeColors={["var(--persona-black)"]}
+            {/* 
+              * This is the text stroke layer; we are not using StrokedText component 
+              * here because we dont want the stroke layer to come over text layer.
+              */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none"
             >
+                <div className="absolute leading-[0.89] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-(--persona-white)">
+                    {buttonMetadatas.map((item, i) => (
+                        <div
+                            key={item.label}
+                            className={[
+                                "block origin-center transition-transform duration-150",
+                                item.offset,
+                                i === currentButtonIndex ? "scale-[1.2]" : "scale-100",
+                            ].join(" ")}
+                        >
+                            <span
+                                style={{
+                                    display: "inline-block",
+                                    WebkitTextStrokeWidth: "35px",
+                                    WebkitTextStrokeColor: "var(--persona-black)",
+                                    WebkitTextFillColor: "transparent",
+                                    paintOrder: "stroke fill",
+                                }}
+                            >
+                                {item.label}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="absolute leading-[0.89] left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-(--persona-white)">
                 {buttonMetadatas.map((item, i) => (
                     <button
                         key={item.label}
@@ -258,28 +130,21 @@ export function Options() {
                             i === currentButtonIndex ? "scale-[1.2]" : "scale-100",
                         ].join(" ")}
                     >
-                        {item.label}
+                        {/* {item.label} */}
+                        <Flashy
+                            active={i === currentButtonIndex}
+                            colors={["#ff0022", "#1cfeff"]}
+                            jitter={{ x: 30, y: 40 }}
+                            scale={[1.5, 1]}
+                            layer="over"
+                            shapeBlendMode="multiply"
+                            blendMode="difference"
+                        >
+                            {item.label}
+                        </Flashy>
                     </button>
                 ))}
-            </StrokedText>
-
-            {positions[currentButtonIndex] && (
-                <svg
-                    className="pointer-events-none absolute z-30"
-                    viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-                    preserveAspectRatio="none"
-                    style={{
-                        left: `${positions[currentButtonIndex].cx}%`,
-                        top: `${positions[currentButtonIndex].cy}%`,
-                        width: `${positions[currentButtonIndex].w}%`,
-                        height: `${positions[currentButtonIndex].h}%`,
-                        transform: "translate(-50%, -50%)",
-                        mixBlendMode: "difference",
-                    }}
-                >
-                    <AnimatedPolygons />
-                </svg>
-            )}
+            </div>
         </div>
     );
 }
@@ -293,14 +158,16 @@ function Foreground() {
             <div className="relative grid w-full h-full">
                 <Options />
 
-                <StrokedText className="absolute text-4xl text-(--persona-white) right-15 bottom-5 flex gap-10" strokeColors={["var(--persona-white)", "var(--persona-black)"]} strokeWidths={["15px", "10px"]}>
+                <div className="absolute text-4xl text-(--persona-white) right-15 bottom-5 flex gap-10">
                     <div className="flex gap-4">
                         <div className="bg-black outline-white outline-3 p-1.75">
                             {/* ↑↓ */}
                             <svg className="rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24" fill="currentColor"><path d="M7,21L2,16l5-5l1.43,1.4L5.83,15H21v2H5.83l2.6,2.6L7,21Zm10-8l-1.42-1.4L18.18,9H3V7H18.18l-2.6-2.6L17,3l5,5l-5,5Z" /></svg>
                         </div>
 
-                        Navigate
+                        <StrokedText strokeColors={["var(--persona-white)", "var(--persona-black)"]} strokeWidths={["15px", "10px"]}>
+                            Navigate
+                        </StrokedText>
                     </div>
 
                     <div className="flex gap-4">
@@ -309,9 +176,11 @@ function Foreground() {
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24px" width="24px" fill="currentColor"><path d="M4,15V9H6v4H18V9h2v6H4Z" /></svg>
                         </div>
 
-                        Select
+                        <StrokedText strokeColors={["var(--persona-white)", "var(--persona-black)"]} strokeWidths={["15px", "10px"]}>
+                            Select
+                        </StrokedText>
                     </div>
-                </StrokedText>
+                </div>
             </div>
         </div>
     )

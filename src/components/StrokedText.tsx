@@ -1,34 +1,48 @@
 import { type ReactNode } from "react";
 
-type StrokedTextProps = { 
-    className: string, 
-    children: ReactNode, 
-    strokeWidths: string[], 
-    strokeColors: string[],
-}
+type StrokedTextProps = {
+    className?: string;
+    children: ReactNode;
+    strokeWidths: string[];
+    strokeColors: string[];
+};
 
-export default function StrokedText({ className, children, strokeWidths, strokeColors }: StrokedTextProps) {
+export default function StrokedText({
+    className = "",
+    children,
+    strokeWidths,
+    strokeColors,
+}: StrokedTextProps) {
     if (strokeWidths.length !== strokeColors.length) {
-        throw new Error("Bhukkk");
+        throw new Error("strokeWidths and strokeColors must have the same length");
     }
 
     return (
-        <>
-            {strokeWidths.map((strokeWidth, i) => 
-                <div key={i} className={className} role="presentation" style={{
-                    WebkitTextStrokeWidth: strokeWidth,
-                    WebkitTextStrokeColor: strokeColors[i],
-                    userSelect: "none",
-                    paintOrder: "stroke fill",
-                    WebkitTextFillColor: "transparent",
-                }}>
+        <span
+            className={className}
+            style={{
+                display: "inline-grid", 
+                isolation: "isolate",
+            }}
+        >
+            {strokeWidths.map((strokeWidth, i) => (
+                <span
+                    key={i}
+                    role="presentation"
+                    style={{
+                        gridArea: "1 / 1",
+                        WebkitTextStrokeWidth: strokeWidth,
+                        WebkitTextStrokeColor: strokeColors[i],
+                        WebkitTextFillColor: "transparent",
+                        paintOrder: "stroke fill",
+                        userSelect: "none",
+                    }}
+                >
                     {children}
-                </div>
-            )}
+                </span>
+            ))}
 
-            <div className={className}>
-                {children}
-            </div>
-        </>
+            <span style={{ gridArea: "1 / 1" }}>{children}</span>
+        </span>
     );
 }

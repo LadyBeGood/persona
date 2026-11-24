@@ -25,9 +25,9 @@ export default function Layout() {
 
             {/* <Outlet /> */}
 
-            {/* <div role="presentation" className="w-full h-full overflow-hidden absolute pointer-events-none -z-1">
+            <div role="presentation" className="w-full h-full overflow-hidden absolute pointer-events-none -z-1">
                 <img src="./confirm.png" className="object-cover h-full w-full" alt="" />
-            </div> */}
+            </div>
 
             <Confirm />
         </>

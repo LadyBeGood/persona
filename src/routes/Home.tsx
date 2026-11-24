@@ -10,7 +10,7 @@ function Background() {
             {/* Stars */}
             <div
                 className="w-full absolute aspect-video overflow-hidden"
-                // style={{ mask: "linear-gradient(-71.8deg, #fff 49.5%, transparent 0) top right" }}
+                style={{ mask: "linear-gradient(-71.8deg, #fff 49.5%, transparent 0) top right" }}
             >
                 {/* <div className="bg-(--persona-white) w-full h-full">
 
@@ -21,9 +21,9 @@ function Background() {
             </div>
 
             {/* Art */}
-            {/* <div className="w-full absolute aspect-video grid place-items-center">
+            <div className="w-full absolute aspect-video grid place-items-center">
                 <img src="./removed.png" className="object-cover w-full" alt="" />
-            </div> */}
+            </div>
         </>
     )
 }

@@ -15,7 +15,7 @@ export default function StrokedText({ className, children, strokeWidths, strokeC
     return (
         <>
             {strokeWidths.map((strokeWidth, i) => 
-                <div className={className} role="presentation" style={{
+                <div key={i} className={className} role="presentation" style={{
                     WebkitTextStrokeWidth: strokeWidth,
                     WebkitTextStrokeColor: strokeColors[i],
                     userSelect: "none",

@@ -23,13 +23,13 @@ export default function Layout() {
             <div role="presentation" className="w-full h-full overflow-hidden absolute opacity-70 bg-(--persona-red) pointer-events-none -z-1"></div>
             
 
-            {/* <Outlet /> */}
+            <Outlet />
 
-            <div role="presentation" className="w-full h-full overflow-hidden absolute pointer-events-none -z-1">
-                <img src="./confirm.png" className="object-cover h-full w-full" alt="" />
-            </div>
+            {/* <div role="presentation" className="w-full h-full overflow-hidden absolute pointer-events-none -z-1">
+                <img src="./psee.png" className="object-cover h-full w-full" alt="" />
+            </div> */}
 
-            <Confirm />
+            {/* <Confirm /> */}
         </>
     )
 }

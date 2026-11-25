@@ -10,7 +10,8 @@
 }
 
 * {
-    cursor: url("./pointer64x57.png"), auto !important;
+    /* cursor: url("./Curves.svg") 64 64, auto !important; */
+    cursor: url("./p3.svg") 0 0, auto !important;
 }
 
 @font-face {

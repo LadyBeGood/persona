@@ -57,7 +57,6 @@ export function Options({ isConfirmDialogOpen, setIsConfirmDialogOpen }: Options
 
 
     function handleButtonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, i: number) {
-        console.log("here" + Math.random());
         setCurrentButtonIndex(i);
         buttonMetadatas[i].action();
     }

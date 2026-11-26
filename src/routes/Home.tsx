@@ -1,9 +1,10 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import StarAnimation from "../components/StarAnimation";
 import StrokedText from "../components/StrokedText";
 import { useNavigate } from "react-router";
 import StarBackground from "../components/StarBackground";
 import Flashy from "../components/Flashy";
+import { type Dispatch, type SetStateAction } from "react";
+import Confirm, { type ConfirmOption } from "../components/Confirm";
 
 function Background() {
     return (
@@ -24,13 +25,18 @@ function Background() {
     )
 }
 
-type ButtonsMetadata = { 
-    label: string, 
-    action: () => void, 
-    offset: string,  
+type ButtonsMetadata = {
+    label: string,
+    action: () => void,
+    offset: string,
 };
 
-export function Options() {
+type OptionsProps = {
+    isConfirmDialogOpen: boolean,
+    setIsConfirmDialogOpen: Dispatch<SetStateAction<boolean>>
+}
+
+export function Options({ isConfirmDialogOpen, setIsConfirmDialogOpen }: OptionsProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
     // const [positions, setPositions] = useState<Rect[]>([]);
@@ -42,7 +48,7 @@ export function Options() {
         { label: "SkiLls", action: () => navigate("/skills"), offset: "-translate-x-10" },
         { label: "ProJecTs", action: () => navigate("/projects"), offset: "-translate-x-32" },
         { label: "ConTact", action: () => navigate("/contact"), offset: "-translate-x-14" },
-        { label: "RéSuMé", action: () => /* togglr confirm */ undefined, offset: "-translate-x-26" },
+        { label: "RéSuMé", action: () => setIsConfirmDialogOpen(true), offset: "-translate-x-26" },
     ];
 
     useEffect(() => {
@@ -78,7 +84,7 @@ export function Options() {
 
     return (
         <div
-            ref={containerRef} 
+            ref={containerRef}
             className="relative h-full w-full select-none"
             tabIndex={0} // Make this element focusable in order to capture key down events
             onKeyDown={handleKeyDown}
@@ -139,6 +145,7 @@ export function Options() {
                             layer="over"
                             shapeBlendMode="multiply"
                             blendMode="difference"
+                            paused={isConfirmDialogOpen}
                         >
                             {item.label}
                         </Flashy>
@@ -150,13 +157,18 @@ export function Options() {
 }
 
 
+type ForegroundProps = {
+    isConfirmDialogOpen: boolean,
+    setIsConfirmDialogOpen: Dispatch<SetStateAction<boolean>>
+}
 
-
-function Foreground() {
+function Foreground({ isConfirmDialogOpen, setIsConfirmDialogOpen }: ForegroundProps) {
     return (
-        <div className="w-full h-full overflow-hidden absolute grid place-items-center font-[Expose] text-7xl">
+        <div 
+            className="w-full h-full overflow-hidden absolute grid place-items-center font-[Expose] text-7xl"
+        >
             <div className="relative grid w-full h-full">
-                <Options />
+                <Options isConfirmDialogOpen={isConfirmDialogOpen} setIsConfirmDialogOpen={setIsConfirmDialogOpen} />
 
                 <div className="absolute text-4xl text-(--persona-white) right-15 bottom-5 flex gap-10">
                     <div className="flex gap-4">
@@ -187,10 +199,27 @@ function Foreground() {
 }
 
 export default function Home() {
+    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+    const options: ConfirmOption[] = [
+        { 
+            label: "Yes", 
+            action: () => {
+                window.open("/Utkarsh_Kumar_Frontend_Developer_Resume.pdf", "_blank", "noopener,noreferrer");
+                setIsConfirmDialogOpen(false);
+            }
+        },
+        { 
+            label: "No", 
+            action: () => setIsConfirmDialogOpen(value => !value) 
+        }
+    ];
+
     return (
         <>
             <Background />
-            <Foreground />
+            <Foreground isConfirmDialogOpen={isConfirmDialogOpen} setIsConfirmDialogOpen={setIsConfirmDialogOpen} />
+            <Confirm isOpen={isConfirmDialogOpen} setIsOpen={setIsConfirmDialogOpen} options={options} />
         </>
     )
 }

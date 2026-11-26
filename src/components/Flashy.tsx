@@ -24,8 +24,12 @@ type FlashyProps = {
     blendMode?: React.CSSProperties["mixBlendMode"];
     /** Turn the effect on/off without unmounting the children. */
     active?: boolean;
+    /** Freeze the shapes in place; set back to false to resume from the same frame. */
+    paused?: boolean;
     className?: string;
 };
+
+type AnimState = { from: Quad[]; to: Quad[]; elapsed: number };
 
 // Each corner of the quad starts at a corner of the box and drifts inward by up to `jitter`.
 const CORNERS: { origin: Point; direction: Point }[] = [
@@ -65,12 +69,18 @@ function Flashy({
     shapeBlendMode,
     blendMode,
     active = true,
+    paused = false,
     className = "",
 }: FlashyProps) {
     const polygons = useRef<(SVGPolygonElement | null)[]>([]);
+    const state = useRef<AnimState | null>(null);
 
     const { x: jx, y: jy } = typeof jitter === "number" ? { x: jitter, y: jitter } : jitter;
     const shapeCount = colors.length;
+
+    useEffect(() => {
+        state.current = null;
+    }, [active, jx, jy, shapeCount]);
 
     useEffect(() => {
         if (!active) return;
@@ -79,29 +89,34 @@ function Flashy({
         const draw = (quads: Quad[]) =>
             quads.forEach((quad, i) => polygons.current[i]?.setAttribute("points", toPoints(quad)));
 
-        let from = newQuads();
-        let to = newQuads();
-        let start = performance.now();
-        let frame = 0;
-
-        draw(from);
-        if (prefersReducedMotion()) return;
-
-        const tick = (now: number) => {
-            const t = Math.min((now - start) / duration, 1);
-            draw(from.map((quad, i) => lerpQuad(quad, to[i], t)));
-
-            if (t === 1) {
-                from = to;
-                to = newQuads();
-                start = now;
-            }
-            frame = requestAnimationFrame(tick);
+        const s = (state.current ??= { from: newQuads(), to: newQuads(), elapsed: 0 });
+        const render = () => {
+            const t = Math.min(s.elapsed / duration, 1);
+            draw(s.from.map((quad, i) => lerpQuad(quad, s.to[i], t)));
         };
+
+        render(); // shows the frozen frame immediately when paused or reduced-motion
+        if (paused || prefersReducedMotion()) return;
+
+        let frame = 0;
+        let last: number | null = null;
+
+        function tick(now: number) {
+            s.elapsed += last === null ? 0 : now - last;
+            last = now;
+
+            if (s.elapsed >= duration) {
+                s.from = s.to;
+                s.to = newQuads();
+                s.elapsed = 0;
+            }
+            render();
+            frame = requestAnimationFrame(tick);
+        }
 
         frame = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(frame);
-    }, [active, duration, jx, jy, shapeCount]);
+    }, [active, paused, duration, jx, jy, shapeCount]);
 
     const behind = layer === "behind";
 

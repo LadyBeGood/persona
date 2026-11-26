@@ -10,16 +10,12 @@
 }
 
 * {
-    /* cursor: url("./Curves.svg") 64 64, auto !important; */
-    cursor: url("./p3.svg") 0 0, auto !important;
+    cursor: url("/p3.svg") 0 0, auto !important;
 }
 
 @font-face {
     font-family: "Expose";
-    src: url("./fonts/Expose-Cleaner-Regular.otf");
-    font-optical-sizing: none;
-    -webkit-font-smoothing: antialiased;
-    font-variation-settings: normal;
+    src: url("/fonts/Expose-Cleaner-Regular.otf");
 }
 
 
